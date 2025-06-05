@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kids Cartoon Quiz</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-size: cover;
+      background-position: center;
+      transition: background-image 0.8s ease-in-out;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #fff;
+    }
+
+    .quiz-container {
+      background-color: rgba(0, 0, 0, 0.7);
+      width: 90%;
+      max-width: 600px;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+
+    h1 {
+      color: #ffeb3b;
+      margin-bottom: 20px;
+    }
+
+    .question {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .options button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #ffca28;
+      color: #333;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .options button:hover {
+      background-color: #ffc107;
+    }
+
+    .next-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #03a9f4;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: none;
+    }
+
+    #result {
+      font-weight: bold;
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-container">
+    <h1>Cartoon Quiz Fun!</h1>
+    <div class="question" id="question">Loading question...</div>
+    <div class="options" id="options"></div>
+    <button class="next-btn" onclick="nextQuestion()" id="nextBtn">Next</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const backgrounds = [
+      "https://wallpapercave.com/wp/wp6680071.jpg", 
+      "https://wallpaperaccess.com/full/1198112.jpg", 
+      "https://i.pinimg.com/originals/6a/d8/19/6ad819137caff58f0600c52395c3304d.png", 
+      "https://images6.fanpop.com/image/photos/33200000/Spongebob-spongebob-squarepants-33210772-2327-2923.jpg", 
+      "https://wallpapercave.com/wp/wp1812464.jpg", 
+      "https://cdn.wallpapersafari.com/82/5/F4drQL.jpg", 
+      "https://wallpapercave.com/wp/wp1839654.jpg", 
+      "https://www.pixelstalk.net/wp-content/uploads/2016/01/Babies-Mickey-Mouse-Charaters-Wallpaper.jpg", 
+      "https://wallpapercave.com/wp/wp5463461.jpg",
+      " https://getwallpapers.com/collection/bugs-bunny-wallpaper" 
+    ];
+
+    const quiz = [
+      { question: "What color is Doraemon?", options: ["Blue", "Red", "Green", "Yellow"], answer: "Blue" },
+      { question: "How many legs does a spider have?", options: ["4", "6", "8", "10"], answer: "8" },
+      { question: "What do bees make?", options: ["Sugar", "Honey", "Butter", "Cheese"], answer: "Honey" },
+      { question: "Which animal says 'Moo'?", options: ["Dog", "Cat", "Cow", "Sheep"], answer: "Cow" },
+      { question: "How many fingers do humans have?", options: ["8", "10", "12", "5"], answer: "10" },
+      { question: "What fruit is yellow and monkeys love it?", options: ["Apple", "Banana", "Strawberry", "Orange"], answer: "Banana" },
+      { question: "What shape is a wheel?", options: ["Square", "Circle", "Triangle", "Rectangle"], answer: "Circle" },
+      { question: "Which cartoon has a mouse and a cat chasing?", options: ["Peppa Pig", "Tom & Jerry", "Frozen", "Minions"], answer: "Tom & Jerry" },
+      { question: "What is the capital of India?", options: ["Mumbai", "Delhi", "Chennai", "Bangalore"], answer: "Delhi" },
+      { question: "What is Doraemon's favorite food?", options: ["Dorayaki", "Pizza", "Ice Cream", "Burger"], answer: "Dorayaki" }
+    ];
+
+    let currentIndex = 0;
+    let score = 0;
+
+    function loadBackground(index) {
+      document.body.style.backgroundImage = `url('${backgrounds[index % backgrounds.length]}')`;
+    }
+
+    function loadQuestion() {
+      loadBackground(currentIndex);
+      const current = quiz[currentIndex];
+      document.getElementById("question").textContent = `Q${currentIndex + 1}: ${current.question}`;
+
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+
+      current.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.textContent = option;
+        btn.onclick = () => checkAnswer(option);
+        optionsDiv.appendChild(btn);
+      });
+
+      document.getElementById("result").textContent = "";
+      document.getElementById("nextBtn").style.display = "none";
+    }
+
+    function checkAnswer(selected) {
+      const correct = quiz[currentIndex].answer;
+      const resultDiv = document.getElementById("result");
+
+      if (selected === correct) {
+        score++;
+        resultDiv.textContent = "✅ Correct!";
+        resultDiv.style.color = "lightgreen";
+      } else {
+        resultDiv.textContent = `❌ Oops! Correct answer: ${correct}`;
+        resultDiv.style.color = "#ff8080";
+      }
+
+      document.querySelectorAll(".options button").forEach(btn => btn.disabled = true);
+      document.getElementById("nextBtn").style.display = "inline-block";
+    }
+
+    function nextQuestion() {
+      currentIndex++;
+      if (currentIndex < quiz.length) {
+        loadQuestion();
+      } else {
+        document.body.style.backgroundImage = "url('https://pixahive.com/wp-content/uploads/2021/04/Doraemon-Cartoon-Illustration-410092-pixahive.jpg')";
+        document.querySelector(".quiz-container").innerHTML = `
+          <h1>🎉 You Finished the Quiz!</h1>
+          <p>Your score is <strong>${score}</strong> out of ${quiz.length}!</p>
+          <p>Great job! 🏆</p>
+        `;
+      }
+    }
+
+    loadQuestion();
+  </script>
+
+</body>
+</html>
+
